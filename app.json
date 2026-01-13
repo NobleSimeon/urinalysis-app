@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.noblesimeon.UrineDiagnosisApp"
     },
     "web": {
       "output": "static",
@@ -27,6 +28,9 @@
     },
     "plugins": [
       "expo-router",
+      ["expo-build-properties", {
+        "android": { "usesCleartextTraffic": true }
+      }],
       [
         "expo-splash-screen",
         {
@@ -38,11 +42,18 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "daad3cb3-888c-4114-bf17-5c4c55a691fd"
+      }
     }
   }
 }

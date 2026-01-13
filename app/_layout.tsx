@@ -81,8 +81,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" options={{ title: "Discovery" }} />
         <Stack.Screen name="user-type" options={{ title: "Select Role" }} />
-        <Stack.Screen name="camera-test" options={{ title: "Alignment" }} />
-        <Stack.Screen name="results" options={{ title: "Analysis Report" }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
     </AppContext.Provider>
   );

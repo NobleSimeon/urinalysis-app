@@ -38,6 +38,7 @@ yarn-error.*
 
 app copy/
 app copy 2/
+app copy 3/
 server/
 
 # generated native folders

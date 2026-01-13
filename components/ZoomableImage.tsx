@@ -7,15 +7,41 @@ import { X, Maximize2 } from 'lucide-react-native';
 const { width } = Dimensions.get('window');
 
 interface Props {
-  base64Image: string;
+  base64Image?: string; // Kept for backward compatibility if needed
+  imageSource?: string; // NEW: Can be Base64 OR a filename (e.g., "img_123.jpg")
+  piIp?: string;        // NEW: Needed to construct the URL if it's a filename
   label?: string;
 }
 
-export default function ZoomableImage({ base64Image, label }: Props) {
+export default function ZoomableImage({ base64Image, imageSource, piIp, label }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
 
+  // --- SMART SOURCE RESOLUTION ---
+  // Use imageSource if available, fallback to base64Image for safety
+  const rawSource = imageSource || base64Image;
+
+  if (!rawSource) return null;
+
+  let finalUri = '';
+
+  // Check if it's a raw Base64 string (starts with 'data:' OR is very long)
+  // URLs are usually short (<200 chars), Base64 images are huge (>1000 chars)
+  if (rawSource.startsWith('data:') || rawSource.length > 500) {
+    // Case A: It's a raw Base64 string (from Live Camera)
+    finalUri = rawSource.startsWith('data:') 
+      ? rawSource 
+      : `data:image/jpeg;base64,${rawSource}`;
+  } else {
+    // Case B: It's a filename from the Database (History)
+    // We assume the Pi serves images at /uploads/
+    // Default to a placeholder IP if piIp is missing, though it should be provided
+    const ip = piIp || '192.168.4.1'; 
+    finalUri = `http://${ip}:5000/uploads/${rawSource}`;
+  }
+
+  // --- GESTURE LOGIC (Preserved) ---
   const pinch = Gesture.Pinch()
     .onUpdate((e) => {
       scale.value = savedScale.value * e.scale;
@@ -39,14 +65,13 @@ export default function ZoomableImage({ base64Image, label }: Props) {
     setModalVisible(false);
   };
 
-  if (!base64Image) return null;
-
   return (
     <View style={styles.thumbnailContainer}>
       <TouchableOpacity onPress={() => setModalVisible(true)} activeOpacity={0.8}>
         <Animated.Image 
-          source={{ uri: `data:image/jpeg;base64,${base64Image}` }} 
+          source={{ uri: finalUri }} 
           style={styles.thumbnail} 
+          resizeMode="cover"
         />
         <View style={styles.overlay}>
           <Maximize2 color="white" size={20} />
@@ -63,7 +88,7 @@ export default function ZoomableImage({ base64Image, label }: Props) {
 
             <GestureDetector gesture={pinch}>
               <Animated.Image
-                source={{ uri: `data:image/jpeg;base64,${base64Image}` }}
+                source={{ uri: finalUri }}
                 style={[styles.fullImage, animatedStyle]}
                 resizeMode="contain"
               />

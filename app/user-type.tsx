@@ -10,7 +10,7 @@ export default function UserTypeScreen() {
 
   const select = (role: 'MEDICAL' | 'LAYMAN') => {
     setUserRole(role);
-    router.push('/camera-test');
+    router.push('/(tabs)/home');
   };
 
   return (
