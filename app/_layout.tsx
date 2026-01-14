@@ -39,7 +39,8 @@ export const useApp = () => {
 // --- 2. Layout Component ---
 export default function RootLayout() {
   const router = useRouter();
-  const [piIp, setPiIp] = useState('192.168.67.237');
+  // const [piIp, setPiIp] = useState('192.168.67.237');
+  const [piIp, setPiIp] = useState('192.168.4.1'); // Hotspot Default
   const [userRole, setUserRole] = useState<'MEDICAL' | 'LAYMAN' | null>(null);
   const [results, setResults] = useState<AnalysisResult | null>(null);
 
