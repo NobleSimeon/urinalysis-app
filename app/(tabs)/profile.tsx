@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { Save, Camera } from 'lucide-react-native';
 import { useApp } from '../_layout';
-import { apiService } from '../../services/api';
+import { apiService } from '@/services/api';
 
 export default function ProfileScreen() {
   const { piIp, setPiIp, userRole } = useApp();
@@ -101,6 +101,11 @@ export default function ProfileScreen() {
   };
 
   return (
+    <KeyboardAvoidingView 
+      style={{ flex: 1 }} 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+    >
     <ScrollView contentContainerStyle={styles.container}>
       {/* Avatar Section */}
       <TouchableOpacity style={styles.avatarContainer} onPress={pickImage}>
@@ -155,6 +160,7 @@ export default function ProfileScreen() {
 
       <Text style={styles.roleDisplay}>Current App Role: {userRole}</Text>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
